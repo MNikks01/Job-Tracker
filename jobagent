@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Day-to-day driver for the AI Job Search Agent.
+# Loads .env cleanly (strips inline comments) and dispatches to the worker/dashboard.
+#
+#   ./jobagent cycle      # discover new jobs + score them (the funnel)
+#   ./jobagent discover   # discover only
+#   ./jobagent match      # re-score existing jobs
+#   ./jobagent scan       # read + classify the recruiter inbox
+#   ./jobagent draft      # draft replies for recruiter messages (needs review in dashboard)
+#   ./jobagent report     # write reports/new-jobs.md
+#   ./jobagent dashboard  # start the dashboard at http://localhost:3000
+#   ./jobagent watch      # run scheduled discovery forever (DISCOVERY_CRON, default every 30m)
+#   ./jobagent status     # quick funnel counts from Postgres
+set -euo pipefail
+cd "$(dirname "$0")"
+
+# --- load .env (one var per call; strips trailing "  # comment" and whitespace) ---
+clean() { grep -E "^$1=" .env 2>/dev/null | head -1 | cut -d= -f2- | sed -E 's/[[:space:]]+#.*$//;s/[[:space:]]+$//'; }
+for v in DATABASE_URL ANTHROPIC_API_KEY REDIS_URL \
+         GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_REDIRECT_URI; do
+  val="$(clean "$v")"; [ -n "$val" ] && export "$v=$val"
+done
+export SOURCES_FILE="${SOURCES_FILE:-$(pwd)/config/sources.json}"
+export PROFILE_FILE="${PROFILE_FILE:-$(pwd)/config/profile.json}"
+export TZ_HINT="${TZ_HINT:-Asia/Kolkata}"
+
+[ -n "${DATABASE_URL:-}" ] || { echo "DATABASE_URL not set in .env"; exit 1; }
+w() { pnpm --filter @jobagent/worker "$@"; }
+
+case "${1:-}" in
+  discover)  w discover:once ;;
+  match)     w match:run ;;
+  cycle)     w discover:once && w match:run ;;
+  scan)      w inbox:scan ;;
+  draft)     w reply:draft ;;
+  report)    w report:jobs ;;
+  watch)     w start ;;
+  dashboard) pnpm --filter @jobagent/dashboard dev ;;
+  status)
+    node -e '
+      const {Client}=require("./packages/db/node_modules/pg")||require("pg");
+    ' 2>/dev/null || true
+    ( cd packages/db && DATABASE_URL="$DATABASE_URL" node -e '
+      const {Client}=require("pg");
+      (async()=>{const c=new Client(process.env.DATABASE_URL);await c.connect();
+        const one=async(q)=>(await c.query(q)).rows[0].n;
+        console.log("jobs            ", await one("SELECT count(*) n FROM job"));
+        console.log("matched         ", await one("SELECT count(*) n FROM match"));
+        console.log("pending approval", await one("SELECT count(*) n FROM approval WHERE status=\x27pending\x27"));
+        console.log("applied         ", await one("SELECT count(*) n FROM application WHERE state=\x27applied\x27"));
+        console.log("needs manual    ", await one("SELECT count(*) n FROM application WHERE state=\x27needs_manual\x27"));
+        console.log("reply drafts    ", await one("SELECT count(*) n FROM reply_draft WHERE status=\x27pending\x27"));
+        console.log("audit entries   ", await one("SELECT count(*) n FROM audit_log"));
+        await c.end();})().catch(e=>{console.error(e.message);process.exit(1);});' ) ;;
+  *)
+    grep -E '^#   \./jobagent' "$0" | sed 's/^#   //' ;;
+esac

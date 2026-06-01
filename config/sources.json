@@ -1,0 +1,74 @@
+[
+  {
+    "key": "greenhouse:gitlab",
+    "kind": "greenhouse",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "board": "gitlab", "company": "GitLab" }
+  },
+  {
+    "key": "greenhouse:anthropic",
+    "kind": "greenhouse",
+    "enabled": false,
+    "rateRps": 1,
+    "options": { "board": "anthropic", "company": "Anthropic" }
+  },
+  {
+    "key": "greenhouse:vercel",
+    "kind": "greenhouse",
+    "enabled": false,
+    "rateRps": 1,
+    "options": { "board": "vercel", "company": "Vercel" }
+  },
+  {
+    "key": "remotive:software-dev",
+    "kind": "remotive",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "category": "software-dev" }
+  },
+  {
+    "key": "remotive:devops",
+    "kind": "remotive",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "category": "devops" }
+  },
+  {
+    "key": "remoteok",
+    "kind": "remoteok",
+    "enabled": true,
+    "rateRps": 1,
+    "options": {
+      "query": "engineer,developer,software,sde,node,nodejs,typescript,javascript,react,next,backend,back end,frontend,front end,full stack,fullstack,full-stack,devops,platform,golang,python"
+    }
+  },
+  {
+    "key": "weworkremotely:backend",
+    "kind": "weworkremotely",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "rssUrl": "https://weworkremotely.com/categories/remote-back-end-programming-jobs.rss" }
+  },
+  {
+    "key": "weworkremotely:fullstack",
+    "kind": "weworkremotely",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "rssUrl": "https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss" }
+  },
+  {
+    "key": "weworkremotely:frontend",
+    "kind": "weworkremotely",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "rssUrl": "https://weworkremotely.com/categories/remote-front-end-programming-jobs.rss" }
+  },
+  {
+    "key": "weworkremotely:devops",
+    "kind": "weworkremotely",
+    "enabled": true,
+    "rateRps": 1,
+    "options": { "rssUrl": "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss" }
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "/api/reply/route": "app/api/reply/route.js",
+  "/inbox/page": "app/inbox/page.js",
+  "/page": "app/page.js"
+}

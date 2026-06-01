@@ -1,0 +1,44 @@
+{
+  "name": "@jobagent/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "discover:once": "tsx src/run-once.ts",
+    "match:run": "tsx src/match-run.ts",
+    "tailor:run": "tsx src/tailor-run.ts",
+    "queue:build": "tsx src/queue-build.ts",
+    "queue:approve": "tsx src/queue-approve.ts",
+    "materials:prepare": "tsx src/materials-prepare.ts",
+    "apply:run": "tsx src/apply-run.ts",
+    "embed:run": "tsx src/embed-run.ts",
+    "schedule:demo": "tsx src/schedule-demo.ts",
+    "inbox:demo": "tsx src/inbox-demo.ts",
+    "report:jobs": "tsx src/report-jobs.ts",
+    "materials:export": "tsx src/export-materials.ts",
+    "track:applied": "tsx src/track-applied.ts",
+    "track:report": "tsx src/track-report.ts",
+    "oauth:google": "tsx src/oauth-google.ts",
+    "inbox:scan": "tsx src/inbox-scan.ts",
+    "reply:draft": "tsx src/reply-draft.ts"
+  },
+  "dependencies": {
+    "@jobagent/shared": "workspace:*",
+    "@jobagent/core": "workspace:*",
+    "@jobagent/sources": "workspace:*",
+    "@jobagent/pipeline": "workspace:*",
+    "@jobagent/matching": "workspace:*",
+    "@jobagent/embeddings": "workspace:*",
+    "@jobagent/scheduler": "workspace:*",
+    "@jobagent/inbox": "workspace:*",
+    "@jobagent/google": "workspace:*",
+    "@jobagent/llm": "workspace:*",
+    "@jobagent/materials": "workspace:*",
+    "@jobagent/db": "workspace:*",
+    "bullmq": "^5.21.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.1"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "packages/shared" },
+    { "path": "packages/core" },
+    { "path": "packages/sources" },
+    { "path": "packages/pipeline" },
+    { "path": "packages/matching" },
+    { "path": "packages/llm" },
+    { "path": "packages/materials" },
+    { "path": "packages/embeddings" },
+    { "path": "packages/scheduler" },
+    { "path": "packages/inbox" },
+    { "path": "packages/google" },
+    { "path": "packages/db" },
+    { "path": "apps/worker" },
+    { "path": "apps/mcp-jobs" },
+    { "path": "apps/mcp" }
+  ]
+}

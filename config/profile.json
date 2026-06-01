@@ -1,0 +1,225 @@
+{
+  "fullName": "Nikhil Namdeo Meshram",
+  "headline": "Senior Full Stack Engineer | MERN | Node.js | AWS | Docker",
+  "yearsExperience": 5,
+  "seniority": ["senior"],
+  "targetTitles": [
+    "software engineer",
+    "software developer",
+    "application developer",
+
+    "full stack engineer",
+    "full stack developer",
+    "full stack software engineer",
+    "javascript full stack developer",
+    "mern stack developer",
+    "mern developer",
+
+    "frontend engineer",
+    "frontend developer",
+    "react developer",
+    "react.js developer",
+    "react engineer",
+
+    "software development engineer",
+    "software development engineer 1",
+    "software development engineer 2",
+    "sde",
+    "sde1",
+    "sde2",
+
+    "product engineer",
+
+    "node.js developer",
+    "node.js engineer",
+    "backend developer",
+    "backend engineer",
+
+    "next.js developer",
+    "next.js engineer",
+
+    "web developer",
+    "web application developer",
+
+    "associate software engineer",
+    "associate software developer",
+
+    "senior software engineer",
+    "senior full stack engineer",
+    "senior full stack developer",
+    "senior react developer"
+  ],
+  "skills": [
+    "javascript",
+    "typescript",
+    "react",
+    "next.js",
+    "redux toolkit",
+    "tanstack query",
+    "tailwind css",
+
+    "node.js",
+    "express.js",
+    "rest api",
+    "graphql",
+
+    "mongodb",
+    "mongoose",
+    "postgresql",
+    "prisma",
+    "redis",
+    "supabase",
+    "firebase",
+
+    "jwt",
+    "oauth",
+    "socket.io",
+    "websockets",
+
+    "rabbitmq",
+    "bullmq",
+    "microservices",
+    "distributed systems",
+
+    "react native",
+    "expo",
+
+    "aws",
+    "ec2",
+    "s3",
+    "rds",
+
+    "docker",
+    "docker compose",
+    "kubernetes",
+    "nginx",
+
+    "github actions",
+    "ci/cd",
+
+    "prometheus",
+    "grafana",
+
+    "turborepo",
+    "pnpm",
+
+    "playwright",
+    "puppeteer",
+
+    "mcp",
+
+    "git",
+    "github",
+
+    "aws",
+    "ec2",
+    "s3",
+    "rds"
+  ],
+  "mustHaveAnyOf": ["node", "typescript", "react", "full stack"],
+  "excludeTitleKeywords": [
+    "sales",
+    "account executive",
+    "business development",
+    "marketing",
+    "digital marketing",
+    "growth marketer",
+
+    "recruiter",
+    "talent acquisition",
+    "hr",
+    "human resources",
+    "people operations",
+
+    "designer",
+    "graphic designer",
+    "ui designer",
+    "ux designer",
+    "product designer",
+
+    "customer success",
+    "customer support",
+    "technical support",
+    "support engineer",
+
+    "finance",
+    "accountant",
+    "financial analyst",
+
+    "legal",
+    "lawyer",
+    "paralegal",
+
+    "intern",
+    "internship",
+    "trainee",
+
+    "qa",
+    "quality assurance",
+    "test engineer",
+    "manual tester",
+    "automation tester",
+    "sdet",
+
+    "data analyst",
+    "business analyst",
+    "data scientist",
+    "machine learning engineer",
+
+    "embedded",
+    "firmware",
+    "hardware",
+
+    "wordpress",
+    "shopify",
+
+    "teacher",
+    "trainer",
+    "instructor",
+
+    "project manager",
+    "program manager",
+    "scrum master",
+
+    "content writer",
+    "copywriter",
+
+    "security analyst",
+    "cybersecurity analyst"
+  ],
+  "locations": [
+    "remote",
+    "work from home",
+    "wfh",
+    "anywhere",
+    "global",
+    "worldwide",
+    "remote india",
+    "remote worldwide",
+    "india",
+    "hyderabad",
+    "pune",
+    "mumbai",
+    "bengaluru",
+    "bangalore",
+    "vizag",
+    "visakhapatnam",
+    "ahmedabad",
+    "nagpur",
+    "maharashtra",
+    "apac",
+    "emea",
+    "americas",
+    "united states",
+    "us",
+    "usa",
+    "uk",
+    "united kingdom",
+    "europe",
+    "canada",
+    "germany",
+    "netherlands",
+    "ireland"
+  ],
+  "remoteOk": true
+}

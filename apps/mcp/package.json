@@ -1,0 +1,29 @@
+{
+  "name": "@jobagent/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "mcp:resume": "tsx src/servers/resume.ts",
+    "mcp:postgres": "tsx src/servers/postgres.ts",
+    "mcp:filesystem": "tsx src/servers/filesystem.ts",
+    "mcp:calendar": "tsx src/servers/calendar.ts",
+    "mcp:gmail": "tsx src/servers/gmail.ts",
+    "mcp:jobboards": "tsx src/servers/jobboards.ts",
+    "mcp:redis": "tsx src/servers/redis.ts",
+    "mcp:linkedin": "tsx src/servers/linkedin.ts",
+    "verify": "tsx src/verify-all.ts"
+  },
+  "dependencies": {
+    "@jobagent/shared": "workspace:*",
+    "@jobagent/db": "workspace:*",
+    "@jobagent/sources": "workspace:*",
+    "@jobagent/scheduler": "workspace:*",
+    "@jobagent/inbox": "workspace:*",
+    "@jobagent/google": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ioredis": "^5.4.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": { "tsx": "^4.19.1" }
+}

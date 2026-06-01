@@ -1,0 +1,30 @@
+{
+  "name": "ai-job-search-agent",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Autonomous AI Job Search Agent for Nikhil Meshram (HITL, honesty-first).",
+  "packageManager": "pnpm@9.12.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/node": "^22.7.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.11.0",
+    "vitest": "^2.1.1",
+    "tsx": "^4.19.1",
+    "prettier": "^3.3.3"
+  }
+}

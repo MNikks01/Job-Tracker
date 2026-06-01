@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
+    "types": ["node"],
+    "paths": {
+      "@jobagent/shared": ["./packages/shared/src/index.ts"],
+      "@jobagent/core": ["./packages/core/src/index.ts"],
+      "@jobagent/sources": ["./packages/sources/src/index.ts"],
+      "@jobagent/pipeline": ["./packages/pipeline/src/index.ts"],
+      "@jobagent/matching": ["./packages/matching/src/index.ts"],
+      "@jobagent/llm": ["./packages/llm/src/index.ts"],
+      "@jobagent/materials": ["./packages/materials/src/index.ts"],
+      "@jobagent/embeddings": ["./packages/embeddings/src/index.ts"],
+      "@jobagent/scheduler": ["./packages/scheduler/src/index.ts"],
+      "@jobagent/inbox": ["./packages/inbox/src/index.ts"],
+      "@jobagent/google": ["./packages/google/src/index.ts"],
+      "@jobagent/db": ["./packages/db/src/index.ts"]
+    }
+  }
+}

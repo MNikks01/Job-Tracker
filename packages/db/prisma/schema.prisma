@@ -1,0 +1,270 @@
+// Prisma schema — canonical ORM model (T-004).
+// Mirrors docs/database/schema.sql. Vector columns use Unsupported() until the embedding
+// model/dim is finalized (set vector(N) to the chosen model). Run `prisma generate` and
+// `prisma migrate dev` once an embedding provider is chosen (needs engine download).
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector, pgcrypto]
+}
+
+model Profile {
+  id        String         @id @default(uuid()) @db.Uuid
+  fullName  String         @map("full_name")
+  headline  String?
+  contact   Json           @default("{}")
+  data      Json
+  version   Int            @default(1)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  chunks    ProfileChunk[]
+
+  @@map("profile")
+}
+
+model ProfileChunk {
+  id        String                       @id @default(uuid()) @db.Uuid
+  profileId String                       @map("profile_id") @db.Uuid
+  section   String
+  refId     String                       @map("ref_id")
+  content   String
+  embedding Unsupported("vector(1536)")?
+  createdAt DateTime                     @default(now()) @map("created_at")
+  profile   Profile                      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([section])
+  @@map("profile_chunk")
+}
+
+model Source {
+  id                String      @id @default(uuid()) @db.Uuid
+  key               String      @unique
+  enabled           Boolean     @default(false)
+  automationEnabled Boolean     @default(false) @map("automation_enabled")
+  rateRps           Decimal     @default(1) @map("rate_rps")
+  config            Json        @default("{}")
+  cursor            String?
+  lastRunAt         DateTime?   @map("last_run_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  jobSources        JobSource[]
+
+  @@map("source")
+}
+
+model Job {
+  id           String                       @id @default(uuid()) @db.Uuid
+  canonicalKey String                       @unique @map("canonical_key")
+  title        String
+  company      String
+  location     String?
+  remote       Boolean?
+  description  String?
+  compMin      Int?                         @map("comp_min")
+  compMax      Int?                         @map("comp_max")
+  postedAt     DateTime?                    @map("posted_at")
+  rawRef       String?                      @map("raw_ref")
+  status       String                       @default("discovered")
+  embedding    Unsupported("vector(1536)")?
+  createdAt    DateTime                     @default(now()) @map("created_at")
+  updatedAt    DateTime                     @updatedAt @map("updated_at")
+  sources      JobSource[]
+  match        Match?
+  applications Application[]
+
+  @@index([status, createdAt])
+  @@index([company])
+  @@map("job")
+}
+
+model JobSource {
+  jobId       String   @map("job_id") @db.Uuid
+  sourceId    String   @map("source_id") @db.Uuid
+  sourceJobId String   @map("source_job_id")
+  url         String?
+  fetchedAt   DateTime @default(now()) @map("fetched_at")
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  source      Source   @relation(fields: [sourceId], references: [id])
+
+  @@id([sourceId, sourceJobId])
+  @@map("job_source")
+}
+
+model Match {
+  id         String   @id @default(uuid()) @db.Uuid
+  jobId      String   @unique @map("job_id") @db.Uuid
+  score      Int
+  subscores  Json     @default("{}")
+  confidence Decimal
+  rationale  String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  job        Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([score])
+  @@map("match")
+}
+
+model Application {
+  id             String       @id @default(uuid()) @db.Uuid
+  jobId          String       @map("job_id") @db.Uuid
+  state          String       @default("materials_drafted")
+  normalizedRole String       @map("normalized_role")
+  companyKey     String       @map("company_key")
+  idempotencyKey String?      @map("idempotency_key")
+  submittedAt    DateTime?    @map("submitted_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  job            Job          @relation(fields: [jobId], references: [id])
+  materials      Material[]
+  opportunity    Opportunity?
+  approvals      Approval[]
+
+  @@unique([companyKey, normalizedRole])
+  @@index([state, updatedAt])
+  @@map("application")
+}
+
+model Opportunity {
+  id             String      @id @default(uuid()) @db.Uuid
+  applicationId  String?     @unique @map("application_id") @db.Uuid
+  state          String      @default("applied")
+  lastActivityAt DateTime?   @map("last_activity_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  application    Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  messages       Message[]
+  events         EventCal[]
+  outcomes       Outcome[]
+
+  @@map("opportunity")
+}
+
+model Material {
+  id            String   @id @default(uuid()) @db.Uuid
+  applicationId String?  @map("application_id") @db.Uuid
+  kind          String
+  version       Int      @default(1)
+  isCurrent     Boolean  @default(true) @map("is_current")
+  content       String
+  fileRef       String?  @map("file_ref")
+  claims        Json     @default("[]")
+  createdAt     DateTime @default(now()) @map("created_at")
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("material")
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  opportunityId  String?      @map("opportunity_id") @db.Uuid
+  gmailMessageId String       @unique @map("gmail_message_id")
+  threadId       String       @map("thread_id")
+  direction      String
+  label          String?
+  fromAddr       String?      @map("from_addr")
+  toAddr         String?      @map("to_addr")
+  subject        String?
+  snippet        String?
+  receivedAt     DateTime?    @map("received_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  opportunity    Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@index([threadId])
+  @@index([opportunityId])
+  @@map("message")
+}
+
+model EventCal {
+  id            String       @id @default(uuid()) @db.Uuid
+  opportunityId String?      @map("opportunity_id") @db.Uuid
+  googleEventId String?      @unique @map("google_event_id")
+  startAt       DateTime     @map("start_at")
+  endAt         DateTime     @map("end_at")
+  tz            String
+  link          String?
+  createdAt     DateTime     @default(now()) @map("created_at")
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@map("event_cal")
+}
+
+model Approval {
+  id            String       @id @default(uuid()) @db.Uuid
+  action        String
+  applicationId String?      @map("application_id") @db.Uuid
+  messageId     String?      @map("message_id") @db.Uuid
+  status        String       @default("pending")
+  decidedBy     String?      @map("decided_by")
+  decidedAt     DateTime?    @map("decided_at")
+  expiresAt     DateTime?    @map("expires_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+  @@index([status, expiresAt])
+  @@map("approval")
+}
+
+model AuditLog {
+  id            BigInt   @id @default(autoincrement())
+  occurredAt    DateTime @default(now()) @map("occurred_at")
+  actor         String
+  action        String
+  opportunityId String?  @map("opportunity_id") @db.Uuid
+  approvalId    String?  @map("approval_id") @db.Uuid
+  payloadHash   String   @map("payload_hash")
+  prevHash      String?  @map("prev_hash")
+  entryHash     String   @map("entry_hash")
+
+  @@index([occurredAt])
+  @@index([opportunityId])
+  @@map("audit_log")
+}
+
+model Outcome {
+  id            String       @id @default(uuid()) @db.Uuid
+  opportunityId String?      @map("opportunity_id") @db.Uuid
+  kind          String
+  features      Json         @default("{}")
+  observedAt    DateTime     @default(now()) @map("observed_at")
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@index([kind, observedAt])
+  @@map("outcome")
+}
+
+model LearningParam {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  version   Int
+  value     Json
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([name, version])
+  @@map("learning_param")
+}
+
+model DomainEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  type          String
+  opportunityId String?  @map("opportunity_id") @db.Uuid
+  actor         String
+  payload       Json
+  traceId       String?  @map("trace_id")
+  occurredAt    DateTime @default(now()) @map("occurred_at")
+
+  @@index([type])
+  @@map("domain_event")
+}
+
+model Config {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("config")
+}
